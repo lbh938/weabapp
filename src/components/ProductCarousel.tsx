@@ -252,14 +252,14 @@ export default function ProductCarousel() {
         </form>
       </div>
 
-      <div className="relative max-w-[1800px] mx-auto group">
+      <div className="relative max-w-[1800px] mx-auto px-4 group">
         <div className="w-full overflow-hidden">
           <div 
             ref={scrollRef}
             className="overflow-x-auto scrollbar-hide touch-pan-x"
             style={{ scrollSnapType: 'x mandatory' }}
           >
-            <div className="flex gap-4 py-4">
+            <div className="flex gap-4 py-4 pl-[calc((100%-120px)/2)] pr-[calc((100%-120px)/2)]">
               {infiniteProducts.map((product, index) => (
                 <div
                   key={`${product.id}-${index}`}

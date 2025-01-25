@@ -11,9 +11,15 @@ interface ContentBlock {
   title: string;
   description: string;
   image: string;
-  highlight?: string; // Optionnel
+  highlight?: string;
   imageLeft?: boolean;
   isFullWidth?: boolean;
+  buttonText?: string;
+  buttonLink?: string;
+  animation?: {
+    y: number[];
+    opacity: number[];
+  };
   overlayContent?: {
     mainText: string;
     subText: string;
