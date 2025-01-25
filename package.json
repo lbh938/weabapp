@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@geist-ui/core": "^2.3.8",
+    "framer-motion": "^12.0.5",
     "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^5.4.0"
+    "react-icons": "^5.4.0",
+    "react-intersection-observer": "^9.15.1"
   },
   "devDependencies": {
     "@types/node": "^20",
