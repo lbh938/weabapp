@@ -4,8 +4,25 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import React from 'react';
 
-const contentBlocks = [
+interface ContentBlock {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  highlight?: string; // Optionnel
+  imageLeft?: boolean;
+  isFullWidth?: boolean;
+  overlayContent?: {
+    mainText: string;
+    subText: string;
+    buttonText: string;
+    buttonLink: string;
+  };
+}
+
+const contentBlocks: ContentBlock[] = [
   {
     id: 1,
     title: "Protection Maximale",
@@ -77,7 +94,7 @@ export default function ContentSection() {
 
   const isMobile = useIsMobile();
 
-  const getVariants = (block: typeof contentBlocks[0]) => {
+  const getVariants = (block: ContentBlock) => {
     if (isMobile) {
       // Animation mobile plus rapide
       if (block.isFullWidth) {
@@ -250,17 +267,20 @@ export default function ContentSection() {
                     </h3>
                     <p className={`leading-relaxed ${
                       block.id === 2
-                        ? 'text-sm sm:text-base md:text-lg lg:text-xl' // Texte adaptatif pour la deuxième section
-                        : 'text-base md:text-lg' // Taille standard pour les autres sections
+                        ? 'text-sm sm:text-base md:text-lg lg:text-xl'
+                        : 'text-base md:text-lg'
                     } text-gray-600`}>
-                      {block.description.split(block.highlight).map((part, i, arr) => (
-                        <>
-                          {part}
-                          {i < arr.length - 1 && (
-                            <span className="text-black font-medium">{block.highlight}</span>
-                          )}
-                        </>
-                      ))}
+                      {block.highlight && block.description 
+                        ? block.description.split(block.highlight).map((part, i, arr) => (
+                            <React.Fragment key={i}>
+                              {part}
+                              {i < arr.length - 1 && (
+                                <span className="text-black font-medium">{block.highlight}</span>
+                              )}
+                            </React.Fragment>
+                          ))
+                        : block.description
+                      }
                     </p>
                   </div>
                 </div>
