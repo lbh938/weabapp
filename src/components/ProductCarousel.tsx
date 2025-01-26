@@ -7,98 +7,179 @@ import React from 'react';
 const products = [
   {
     id: 1,
-    image: "https://picsum.photos/600/800?random=1",
+    image: "https://images.unsplash.com/photo-1706001154573-5e7cc8ea814b",
     title: "iPhone 15 Pro",
     description: "Design Titanium",
     alt: "iPhone 15 Pro case"
   },
   {
     id: 2,
-    image: "https://picsum.photos/600/800?random=2",
+    image: "https://images.unsplash.com/photo-1695048133142-1a20484d8a3c",
     title: "iPhone 15",
     description: "Protection maximale",
     alt: "iPhone 15 case"
   },
   {
     id: 3,
-    image: "https://picsum.photos/600/800?random=3",
+    image: "https://images.unsplash.com/photo-1695048132278-85c8c6d69438",
     title: "iPhone 14 Pro",
     description: "Ultra résistant",
     alt: "iPhone 14 Pro case"
   },
   {
     id: 4,
-    image: "https://picsum.photos/600/800?random=4",
+    image: "https://images.unsplash.com/photo-1678685888221-cda773a3dcdb",
     title: "iPhone 14",
     description: "Style raffiné",
     alt: "iPhone 14 case"
   },
   {
     id: 5,
-    image: "https://picsum.photos/600/800?random=5",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
     title: "iPhone 13 Pro",
     description: "Protection élégante",
     alt: "iPhone 13 Pro case"
   },
   {
     id: 6,
-    image: "https://picsum.photos/600/800?random=6",
+    image: "https://images.unsplash.com/photo-1586920740280-e7da670f7cb7",
     title: "iPhone 13",
     description: "Design premium",
     alt: "iPhone 13 case"
   },
   {
     id: 7,
-    image: "https://picsum.photos/600/800?random=7",
+    image: "https://images.unsplash.com/photo-1706456826042-4ea29ce90cc4",
     title: "Samsung S24 Ultra",
     description: "Protection ultime",
     alt: "Samsung S24 Ultra case"
   },
   {
     id: 8,
-    image: "https://picsum.photos/600/800?random=8",
+    image: "https://images.unsplash.com/photo-1706456825898-1a8220496a78",
     title: "Samsung S24+",
     description: "Design exclusif",
     alt: "Samsung S24+ case"
   },
   {
     id: 9,
-    image: "https://picsum.photos/600/800?random=9",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
     title: "Samsung S24",
     description: "Protection avancée",
     alt: "Samsung S24 case"
   },
   {
     id: 10,
-    image: "https://picsum.photos/600/800?random=10",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
     title: "Samsung S23 Ultra",
     description: "Protection maximale",
     alt: "Samsung S23 Ultra case"
   },
   {
     id: 11,
-    image: "https://picsum.photos/600/800?random=11",
+    image: "https://images.unsplash.com/photo-1586920740280-e7da670f7cb7",
     title: "Samsung S23+",
     description: "Style moderne",
     alt: "Samsung S23+ case"
   },
   {
     id: 12,
-    image: "https://picsum.photos/600/800?random=12",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
     title: "Samsung S23",
     description: "Protection fiable",
     alt: "Samsung S23 case"
+  },
+  {
+    id: 13,
+    image: "https://images.unsplash.com/photo-1698675951502-82e08f5d5f52",
+    title: "Google Pixel 8 Pro",
+    description: "Protection Premium",
+    alt: "Google Pixel 8 Pro case"
+  },
+  {
+    id: 14,
+    image: "https://images.unsplash.com/photo-1698675951419-5b4876a75984",
+    title: "Google Pixel 8",
+    description: "Design Élégant",
+    alt: "Google Pixel 8 case"
+  },
+  {
+    id: 15,
+    image: "https://images.unsplash.com/photo-1621330396173-e41b1cafd17f",
+    title: "OnePlus 12",
+    description: "Protection Avancée",
+    alt: "OnePlus 12 case"
+  },
+  {
+    id: 16,
+    image: "https://images.unsplash.com/photo-1613588718956-c2e80305bf61",
+    title: "OnePlus 12R",
+    description: "Style Moderne",
+    alt: "OnePlus 12R case"
+  },
+  {
+    id: 17,
+    image: "https://images.unsplash.com/photo-1607936854279-55e8a4c64888",
+    title: "Xiaomi 14 Pro",
+    description: "Protection Ultime",
+    alt: "Xiaomi 14 Pro case"
+  },
+  {
+    id: 18,
+    image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179",
+    title: "Xiaomi 14",
+    description: "Design Premium",
+    alt: "Xiaomi 14 case"
+  },
+  {
+    id: 19,
+    image: "https://images.unsplash.com/photo-1603313011101-320f26a4f6f6",
+    title: "Nothing Phone 2",
+    description: "Protection Innovante",
+    alt: "Nothing Phone 2 case"
+  },
+  {
+    id: 20,
+    image: "https://images.unsplash.com/photo-1586920740280-e7da670f7cb7",
+    title: "Nothing Phone 2a",
+    description: "Style Unique",
+    alt: "Nothing Phone 2a case"
+  },
+  {
+    id: 21,
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
+    title: "Pixel Fold",
+    description: "Protection Pliable",
+    alt: "Pixel Fold case"
+  },
+  {
+    id: 22,
+    image: "https://images.unsplash.com/photo-1609692814858-f7cd2f0afa4f",
+    title: "Galaxy Z Fold5",
+    description: "Protection Adaptative",
+    alt: "Galaxy Z Fold5 case"
+  },
+  {
+    id: 23,
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
+    title: "Galaxy Z Flip5",
+    description: "Style Compact",
+    alt: "Galaxy Z Flip5 case"
+  },
+  {
+    id: 24,
+    image: "https://images.unsplash.com/photo-1621330396173-e41b1cafd17f",
+    title: "OPPO Find N3",
+    description: "Protection Flexible",
+    alt: "OPPO Find N3 case"
   }
 ];
 
 export default function ProductCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Créer un tableau infini en répétant les produits
-  const infiniteProducts = [...products, ...products, ...products];
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const checkWidth = () => {
@@ -109,84 +190,57 @@ export default function ProductCarousel() {
     return () => window.removeEventListener('resize', checkWidth);
   }, []);
 
+  // Simplification de la navigation pour les boutons
   const handleNavigation = (direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
     
     const container = scrollRef.current;
-    const scrollAmount = direction === 'left' ? -280 : 280;
-    const currentScroll = container.scrollLeft;
-    const maxScroll = container.scrollWidth - container.clientWidth;
+    const scrollAmount = direction === 'left' ? -240 : 240; // Défilement plus large
     
-    let newScroll = currentScroll + scrollAmount;
-
-    // Effet infini pour tous les écrans
-    if (newScroll > maxScroll - 280) {
-      container.scrollTo({ left: 280, behavior: 'auto' });
-      newScroll = 280 * 2;
-    } else if (newScroll < 280) {
-      container.scrollTo({ left: maxScroll - 280 * 2, behavior: 'auto' });
-      newScroll = maxScroll - 280 * 3;
-    }
-
-    container.scrollTo({
-      left: newScroll,
+    container.scrollBy({
+      left: scrollAmount,
       behavior: 'smooth'
     });
   };
 
-  const updateCurrentIndex = () => {
+  // Fonction pour mettre à jour l'index actuel lors du défilement
+  const handleScroll = () => {
     if (!scrollRef.current) return;
+    
     const container = scrollRef.current;
-    const index = Math.round(container.scrollLeft / 280) % products.length;
-    setCurrentIndex(index);
+    const cardWidth = 120;
+    const gap = 4;
+    const scrollPosition = container.scrollLeft;
+    const newIndex = Math.round(scrollPosition / (cardWidth + gap));
+    
+    setCurrentIndex(Math.min(newIndex, products.length - 1));
   };
 
+  // Ajout de l'écouteur de défilement
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Mise à jour de scrollToCard pour mettre à jour l'index
+  const scrollToCard = (index: number) => {
+    if (!scrollRef.current || index === -1) return;
     
-    // Positionnement initial au milieu du carousel pour tous les écrans
-    container.scrollTo({ left: products.length * 280, behavior: 'auto' });
+    const container = scrollRef.current;
+    const cardWidth = 120;
+    const gap = 4;
+    const scrollPosition = (cardWidth + gap) * index;
 
-    // Ajout des contrôles tactiles pour mobile
-    let touchStart: number | null = null;
-    let touchEnd: number | null = null;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStart = e.targetTouches[0].clientX;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      touchEnd = e.targetTouches[0].clientX;
-    };
-
-    const handleTouchEnd = () => {
-      if (!touchStart || !touchEnd) return;
-      
-      const distance = touchStart - touchEnd;
-      const isLeftSwipe = distance > 50;
-      const isRightSwipe = distance < -50;
-
-      if (isLeftSwipe) {
-        handleNavigation('right');
-      } else if (isRightSwipe) {
-        handleNavigation('left');
-      }
-
-      touchStart = null;
-      touchEnd = null;
-    };
-
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchmove', handleTouchMove);
-    container.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [products.length]);
+    container.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+    
+    setCurrentIndex(index);
+  };
 
   // Fonction pour trouver l'index d'une carte
   const findCardIndex = (search: string): number => {
@@ -195,21 +249,6 @@ export default function ProductCarousel() {
       product.description.toLowerCase().includes(search.toLowerCase())
     );
     return index;
-  };
-
-  // Fonction pour scroller jusqu'à la carte
-  const scrollToCard = (index: number) => {
-    if (!scrollRef.current || index === -1) return;
-    
-    const container = scrollRef.current;
-    const cardWidth = 120; // Largeur d'une carte
-    const gap = 4; // Gap entre les cartes
-    const scrollPosition = (cardWidth + gap) * (index + products.length); // +products.length pour aller à la deuxième série
-
-    container.scrollTo({
-      left: scrollPosition,
-      behavior: 'smooth'
-    });
   };
 
   // Gestionnaire de recherche
@@ -232,7 +271,6 @@ export default function ProductCarousel() {
           Protection sur mesure pour chaque appareil
         </p>
         
-        {/* Barre de recherche modifiée */}
         <form onSubmit={handleSearch} className="max-w-sm mx-auto relative">
           <input
             type="text"
@@ -252,18 +290,22 @@ export default function ProductCarousel() {
         </form>
       </div>
 
-      <div className="relative max-w-[1800px] mx-auto px-4 group">
+      <div className="relative max-w-[5000px] mx-auto px-0">
         <div className="w-full overflow-hidden">
           <div 
             ref={scrollRef}
-            className="overflow-x-auto scrollbar-hide touch-pan-x"
-            style={{ scrollSnapType: 'x mandatory' }}
+            className="overflow-x-scroll scrollbar-hide touch-pan-x overscroll-x-contain"
+            style={{ 
+              WebkitOverflowScrolling: 'touch'
+            }}
           >
-            <div className="flex gap-4 py-4 pl-[calc((100%-120px)/2)] pr-[calc((100%-120px)/2)]">
-              {infiniteProducts.map((product, index) => (
+            <div className="flex gap-4 py-4">
+              <div className="w-[0.5vw] flex-shrink-0" />
+              
+              {products.map((product, index) => (
                 <div
-                  key={`${product.id}-${index}`}
-                  className="w-[120px] flex-shrink-0 scroll-snap-align-start"
+                  key={product.id}
+                  className="w-[120px] flex-shrink-0"
                 >
                   <div className="bg-white rounded-md overflow-hidden shadow-sm relative">
                     <div className="relative h-[140px]">
@@ -287,42 +329,10 @@ export default function ProductCarousel() {
                   </div>
                 </div>
               ))}
+
+              <div className="w-[0.5vw] flex-shrink-0" />
             </div>
           </div>
-        </div>
-
-        {showControls && (
-          <>
-            <button
-              onClick={() => handleNavigation('left')}
-              className="hidden lg:flex absolute -left-28 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 items-center justify-center shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100 z-10 hover:scale-110"
-              aria-label="Précédent"
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => handleNavigation('right')}
-              className="hidden lg:flex absolute -right-28 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 items-center justify-center shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100 z-10 hover:scale-110"
-              aria-label="Suivant"
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </>
-        )}
-
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
-          {products.map((_, i) => (
-            <button
-              key={i}
-              className={`w-2 h-2 rounded-full transition-all ${
-                currentIndex === i ? 'w-6 bg-black' : 'bg-black/20'
-              }`}
-            />
-          ))}
         </div>
       </div>
     </div>
