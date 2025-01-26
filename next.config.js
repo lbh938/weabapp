@@ -7,19 +7,12 @@ const nextConfig = {
       'picsum.photos',
       'images.pexels.com',
       'www.apple.com',
+      'vfuwqxhldukstzrwfjjf.supabase.co',
     ],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.pexels.com',
+        hostname: '**',
       }
     ]
   },
@@ -30,22 +23,16 @@ const nextConfig = {
         has: [
           {
             type: 'query',
-            key: 'payment_intent',
+            key: 'session_id',
           },
         ],
         permanent: false,
         destination: '/success',
       },
       {
-        source: '/payment-error',
-        has: [
-          {
-            type: 'query',
-            key: 'error',
-          },
-        ],
+        source: '/cancel',
         permanent: false,
-        destination: '/payment-error',
+        destination: '/checkout',
       },
     ];
   },
