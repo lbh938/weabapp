@@ -155,8 +155,28 @@ const customizationOptions = [
   }
 ];
 
-// Modifiez la constante baseImages pour utiliser des images de démonstration
-const baseImages = {
+// Définir le type pour les mockups d'appareils
+type DeviceMockups = {
+  [key: string]: string;
+};
+
+type MockupImages = {
+  mockups: {
+    devices: DeviceMockups;
+    colors: {
+      [key: string]: string;
+    };
+    materials: {
+      [key: string]: {
+        preview: string;
+        thumbnail: string;
+      };
+    };
+  };
+};
+
+// Modifiez la constante baseImages avec le typage
+const baseImages: MockupImages = {
   mockups: {
     devices: {
       "iPhone 15 Pro": "/images/mockups/iphone-15-pro.png",
@@ -373,7 +393,7 @@ export default function CustomizationSection() {
               {/* Image de l'appareil */}
               <div className="relative w-full h-full">
                 <Image
-                  src={selectedOptions[1] 
+                  src={selectedOptions[1] && baseImages.mockups.devices[selectedOptions[1]]
                     ? baseImages.mockups.devices[selectedOptions[1]]
                     : "/images/mockups/default-phone.png"}
                   alt={selectedOptions[1] || "Sélectionnez un modèle"}
@@ -383,7 +403,7 @@ export default function CustomizationSection() {
                 />
                 
                 {/* Calque de couleur/matériau sélectionné */}
-                {selectedOptions[2] && (
+                {selectedOptions[2] && baseImages.mockups.colors[selectedOptions[2]] && (
                   <div className="absolute inset-0">
                     <Image
                       src={baseImages.mockups.colors[selectedOptions[2]]}
