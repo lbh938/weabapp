@@ -13,6 +13,7 @@ export interface Product {
   meta_title: string;
   meta_description: string;
   is_featured: boolean;
+  created_at: string;
 }
 
 export interface CustomizationOption {
@@ -34,6 +35,13 @@ export interface PhoneModel {
   sort_order: number;
 }
 
+export interface ProductStats {
+  totalSales: number;
+  revenue: number;
+  averageOrderValue: number;
+  topProducts: Product[];
+}
+
 export function useProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +51,6 @@ export function useProducts() {
   }>({});
   const [phoneModels, setPhoneModels] = useState<PhoneModel[]>([]);
 
-  // Charger tous les produits
   const loadProducts = async () => {
     try {
       const { data, error } = await supabase
@@ -52,14 +59,13 @@ export function useProducts() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProducts(data);
+      setProducts(data || []);
     } catch (err) {
       setError('Erreur lors du chargement des produits');
       console.error(err);
     }
   };
 
-  // Charger les options de personnalisation
   const loadCustomizationOptions = async () => {
     try {
       const { data, error } = await supabase
@@ -69,14 +75,13 @@ export function useProducts() {
 
       if (error) throw error;
 
-      // Grouper les options par catégorie
       const grouped = data.reduce((acc, option) => {
         if (!acc[option.category]) {
           acc[option.category] = [];
         }
         acc[option.category].push(option);
         return acc;
-      }, {});
+      }, {} as { [key: string]: CustomizationOption[] });
 
       setCustomizationOptions(grouped);
     } catch (err) {
@@ -85,7 +90,6 @@ export function useProducts() {
     }
   };
 
-  // Charger les modèles de téléphone
   const loadPhoneModels = async () => {
     try {
       const { data, error } = await supabase
@@ -101,7 +105,35 @@ export function useProducts() {
     }
   };
 
-  // Calculer le prix total avec les options
+  const getProductStats = async (period: string): Promise<ProductStats> => {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_product_stats', { period_param: period });
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.error('Erreur lors du chargement des statistiques:', err);
+      throw err;
+    }
+  };
+
+  const searchProducts = async (query: string): Promise<Product[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .ilike('name', `%${query}%`)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error('Erreur lors de la recherche:', err);
+      throw err;
+    }
+  };
+
   const calculateTotalPrice = (basePrice: number, selectedOptions: CustomizationOption[]) => {
     return selectedOptions.reduce(
       (total, option) => total + (option?.price_modifier || 0),
@@ -132,6 +164,8 @@ export function useProducts() {
     calculateTotalPrice,
     loadProducts,
     loadCustomizationOptions,
-    loadPhoneModels
+    loadPhoneModels,
+    getProductStats,
+    searchProducts
   };
 } 
