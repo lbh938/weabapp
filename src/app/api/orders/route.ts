@@ -1,18 +1,32 @@
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Order from '@/models/Order';
+import type { Database } from '@/types/supabase';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    await dbConnect();
-    const body = await req.json();
+    const supabase = createRouteHandlerClient<Database>({ cookies });
+    const body = await request.json();
 
-    const order = await Order.create(body);
+    const { data: order, error } = await supabase
+      .from('orders')
+      .insert([{
+        user_id: body.userId,
+        items: body.items,
+        total_amount: body.totalAmount,
+        shipping_address: body.shippingAddress,
+        status: 'pending'
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return NextResponse.json(order);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error creating order:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Error creating order' },
       { status: 500 }
     );
   }
@@ -20,13 +34,20 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    await dbConnect();
-    const orders = await Order.find({}).sort({ createdAt: -1 });
+    const supabase = createRouteHandlerClient<Database>({ cookies });
+
+    const { data: orders, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
     return NextResponse.json(orders);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error fetching orders:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Error fetching orders' },
       { status: 500 }
     );
   }
