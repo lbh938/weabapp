@@ -10,6 +10,7 @@ import { stripePromise } from '@/lib/stripe';
 import { useCart } from '@/context/CartContext';
 import { v4 as uuidv4 } from 'uuid';
 import { useSupabase } from '@/hooks/useSupabase';
+import type { CartItem } from '@/types/cart';
 
 interface CustomizationOption {
   id: string;
@@ -259,17 +260,16 @@ export default function CustomizationSection() {
       return;
     }
 
-    const customItem = {
-      productId: uuidv4(),
-      customizations: {
-        model: selectedOptions[1],
-        color: selectedOptions[2],
-        material: selectedOptions[3],
-        protection: selectedOptions[4],
-        finish: selectedOptions[7],
-        customText,
-        imageUrl: customImage ? URL.createObjectURL(customImage) : undefined,
-      },
+    const customItem: CartItem = {
+      id: uuidv4(),
+      name: 'Coque Personnalisée',
+      model: selectedOptions[1] || '',
+      color: selectedOptions[2] || '',
+      material: selectedOptions[3] || '',
+      protection: selectedOptions[4] || '',
+      finish: selectedOptions[7] || '',
+      customText: customText,
+      imageUrl: customImage ? URL.createObjectURL(customImage) : undefined,
       quantity: 1,
       price: 29.99
     };
@@ -302,7 +302,15 @@ export default function CustomizationSection() {
         body: JSON.stringify({
           orderId: order.id,
           items: [customItem],
-          customizations: customItem.customizations,
+          customizations: {
+            model: customItem.model,
+            color: customItem.color,
+            material: customItem.material,
+            protection: customItem.protection,
+            finish: customItem.finish,
+            customText: customItem.customText,
+            imageUrl: customItem.imageUrl,
+          },
         }),
       });
 
