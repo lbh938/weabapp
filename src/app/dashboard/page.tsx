@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { FaChartLine, FaShoppingBag, FaEuroSign, FaStar } from 'react-icons/fa';
+import type { Product } from '@/hooks/useProducts';
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +32,7 @@ interface DashboardStats {
   totalSales: number;
   revenue: number;
   averageOrderValue: number;
-  topProducts: any[];
+  topProducts: Product[];
 }
 
 export default function Dashboard() {
@@ -40,7 +41,7 @@ export default function Dashboard() {
   const [period, setPeriod] = useState('week');
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   const loadDashboardData = async () => {
     try {
@@ -110,11 +111,45 @@ export default function Dashboard() {
             </div>
           </GlassCard>
 
-          {/* ... autres statistiques ... */}
+          <GlassCard className="p-6">
+            <div className="flex items-center space-x-4">
+              <FaChartLine className="w-8 h-8 text-purple-500" />
+              <div>
+                <p className="text-sm text-gray-500">Panier moyen</p>
+                <p className="text-2xl font-bold">
+                  {stats.averageOrderValue.toFixed(2)}€
+                </p>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center space-x-4">
+              <FaStar className="w-8 h-8 text-yellow-500" />
+              <div>
+                <p className="text-sm text-gray-500">Notifications</p>
+                <p className="text-2xl font-bold">{unreadCount}</p>
+              </div>
+            </div>
+          </GlassCard>
         </div>
       )}
 
-      {/* Graphique et autres éléments du dashboard */}
+      {/* Résultats de recherche */}
+      {searchResults.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Résultats de recherche</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {searchResults.map((product) => (
+              <GlassCard key={product.id} className="p-4">
+                <h3 className="font-medium">{product.name}</h3>
+                <p className="text-sm text-gray-500">{product.description}</p>
+                <p className="text-lg font-bold mt-2">{product.base_price}€</p>
+              </GlassCard>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
