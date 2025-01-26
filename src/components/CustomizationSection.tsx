@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { FaShoppingBag, FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingBag, FaShoppingCart, FaCheck } from 'react-icons/fa';
 import { HiColorSwatch, HiCube, HiShieldCheck, HiSparkles, HiPhotograph, HiPencilAlt, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -11,44 +11,64 @@ import { useCart } from '@/context/CartContext';
 import { v4 as uuidv4 } from 'uuid';
 import { useSupabase } from '@/hooks/useSupabase';
 
-const brands = {
-  "Apple": [
-    "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15 Plus", "iPhone 15",
-    "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14 Plus", "iPhone 14",
-    "iPhone 13 Pro Max", "iPhone 13 Pro", "iPhone 13", "iPhone 13 Mini",
-    "iPhone 12 Pro Max", "iPhone 12 Pro", "iPhone 12", "iPhone 12 Mini",
-    "iPhone SE 2022", "iPhone 11 Pro Max", "iPhone 11 Pro", "iPhone 11"
+interface CustomizationOption {
+  id: string;
+  label: string;
+  price?: number;
+  image?: string;
+}
+
+type BrandModels = {
+  [key in 'Apple' | 'Samsung' | 'Xiaomi' | 'Google' | 'Huawei' | 'OnePlus']: string[];
+};
+
+const brands: BrandModels = {
+  Apple: [
+    'iPhone 15 Pro Max',
+    'iPhone 15 Pro',
+    'iPhone 15 Plus',
+    'iPhone 15',
+    'iPhone 14 Pro Max',
+    'iPhone 14 Pro',
+    'iPhone 14 Plus',
+    'iPhone 14',
+    'iPhone 13 Pro Max',
+    'iPhone 13 Pro',
+    'iPhone 13',
+    'iPhone 13 Mini',
   ],
-  "Samsung": [
-    "Galaxy S23 Ultra", "Galaxy S23+", "Galaxy S23",
-    "Galaxy S22 Ultra", "Galaxy S22+", "Galaxy S22",
-    "Galaxy S21 Ultra", "Galaxy S21+", "Galaxy S21",
-    "Galaxy Z Fold 5", "Galaxy Z Flip 5",
-    "Galaxy A54", "Galaxy A34", "Galaxy A14",
-    "Galaxy Note 20 Ultra", "Galaxy Note 20"
+  Samsung: [
+    'Galaxy S23 Ultra',
+    'Galaxy S23+',
+    'Galaxy S23',
+    'Galaxy Z Fold 5',
+    'Galaxy Z Flip 5',
+    'Galaxy S22 Ultra',
+    'Galaxy S22+',
+    'Galaxy S22',
   ],
-  "Xiaomi": [
-    "13 Ultra", "13 Pro", "13",
-    "12S Ultra", "12 Pro", "12",
-    "Redmi Note 12 Pro+", "Redmi Note 12 Pro", "Redmi Note 12",
-    "Poco F5 Pro", "Poco F5", "Poco X5 Pro",
-    "Black Shark 5 Pro", "Black Shark 5"
+  Xiaomi: [
+    'Xiaomi 13 Pro',
+    'Xiaomi 13',
+    'Redmi Note 12 Pro+',
   ],
-  "Google": [
-    "Pixel 8 Pro", "Pixel 8",
-    "Pixel 7 Pro", "Pixel 7",
-    "Pixel 6 Pro", "Pixel 6",
-    "Pixel 6a", "Pixel 5"
+  Google: [
+    'Pixel 8 Pro',
+    'Pixel 8',
+    'Pixel 7 Pro',
+    'Pixel 7',
   ],
-  "Huawei": [
-    "P60 Pro", "P60", "P50 Pro", "P50",
-    "Mate 50 Pro", "Mate 50", "Mate 40 Pro",
-    "Nova 11 Pro", "Nova 11"
+  Huawei: [
+    'P60 Pro',
+    'P60',
+    'Mate 50 Pro',
+    'Mate 50',
   ],
-  "OnePlus": [
-    "11", "10 Pro", "10T", "Nord 3",
-    "Nord CE 3", "Nord N30"
-  ]
+  OnePlus: [
+    'OnePlus 11',
+    'OnePlus 10 Pro',
+    'OnePlus 10T',
+  ],
 };
 
 const customizationOptions = [
@@ -188,7 +208,7 @@ export default function CustomizationSection() {
   // Get available models based on selected brand
   const getAvailableModels = () => {
     const selectedBrand = selectedOptions[0];
-    return selectedBrand ? brands[selectedBrand] : [];
+    return selectedBrand ? brands[selectedBrand as keyof BrandModels] : [];
   };
 
   // Modified handleOptionSelect to handle model filtering
