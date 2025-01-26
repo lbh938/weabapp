@@ -7,7 +7,9 @@ import { toast } from 'react-hot-toast';
 interface Notification {
   id: string;
   read: boolean;
-  // ... autres propriétés
+  title: string;
+  message: string;
+  created_at: string;
 }
 
 export function useNotifications() {
@@ -52,28 +54,51 @@ export function useNotifications() {
   };
 
   const handleNewReview = (review: any) => {
-    toast((
-      <div className="bg-white shadow-lg rounded-lg p-4">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <span className="text-blue-500">⭐</span>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900">
-              Nouvel avis ({review.rating} étoiles)
-            </p>
-            <p className="text-sm text-gray-500">
-              {review.review?.substring(0, 50)}...
-            </p>
-          </div>
-        </div>
-      </div>
-    ));
+    // Version simple sans JSX
+    toast.success(`Nouvel avis : ${review.rating} étoiles - ${review.review?.substring(0, 50) || ''}...`, {
+      duration: 5000,
+      position: 'top-right',
+      style: {
+        background: '#fff',
+        color: '#333',
+        padding: '16px',
+        borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      },
+      icon: '⭐',
+    });
+
+    // Mettre à jour les notifications
+    loadNotifications();
+  };
+
+  const markAsRead = async (notificationId: string) => {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', notificationId);
+
+    if (!error) {
+      loadNotifications();
+    }
+  };
+
+  const clearAll = async () => {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('read', false);
+
+    if (!error) {
+      loadNotifications();
+    }
   };
 
   return {
     notifications,
     unreadCount,
-    loadNotifications
+    loadNotifications,
+    markAsRead,
+    clearAll
   };
 } 
