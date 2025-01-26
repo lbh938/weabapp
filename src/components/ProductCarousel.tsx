@@ -3,179 +3,15 @@
 import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import React from 'react';
+import { Database } from '@/types/supabase';
 
-const products = [
-  {
-    id: 1,
-    image: "https://images.pexels.com/photos/5741605/pexels-photo-5741605.jpeg",
-    title: "iPhone 15 Pro",
-    description: "Design Titanium",
-    alt: "iPhone 15 Pro case"
-  },
-  {
-    id: 2,
-    image: "https://images.pexels.com/photos/1294886/pexels-photo-1294886.jpeg",
-    title: "iPhone 15",
-    description: "Protection maximale",
-    alt: "iPhone 15 case"
-  },
-  {
-    id: 3,
-    image: "https://images.pexels.com/photos/5741604/pexels-photo-5741604.jpeg",
-    title: "iPhone 14 Pro",
-    description: "Ultra résistant",
-    alt: "iPhone 14 Pro case"
-  },
-  {
-    id: 4,
-    image: "https://images.pexels.com/photos/4071887/pexels-photo-4071887.jpeg",
-    title: "iPhone 14",
-    description: "Style raffiné",
-    alt: "iPhone 14 case"
-  },
-  {
-    id: 5,
-    image: "https://images.pexels.com/photos/4071882/pexels-photo-4071882.jpeg",
-    title: "iPhone 13 Pro",
-    description: "Protection élégante",
-    alt: "iPhone 13 Pro case"
-  },
-  {
-    id: 6,
-    image: "https://images.pexels.com/photos/4071667/pexels-photo-4071667.jpeg",
-    title: "iPhone 13",
-    description: "Design premium",
-    alt: "iPhone 13 case"
-  },
-  {
-    id: 7,
-    image: "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg",
-    title: "Samsung S24 Ultra",
-    description: "Protection ultime",
-    alt: "Samsung S24 Ultra case"
-  },
-  {
-    id: 8,
-    image: "https://images.pexels.com/photos/5741603/pexels-photo-5741603.jpeg",
-    title: "Samsung S24+",
-    description: "Design exclusif",
-    alt: "Samsung S24+ case"
-  },
-  {
-    id: 9,
-    image: "https://images.pexels.com/photos/47261/pexels-photo-47261.jpeg",
-    title: "Samsung S24",
-    description: "Protection avancée",
-    alt: "Samsung S24 case"
-  },
-  {
-    id: 10,
-    image: "https://images.pexels.com/photos/699122/pexels-photo-699122.jpeg",
-    title: "Samsung S23 Ultra",
-    description: "Protection maximale",
-    alt: "Samsung S23 Ultra case"
-  },
-  {
-    id: 11,
-    image: "https://images.pexels.com/photos/1042143/pexels-photo-1042143.jpeg",
-    title: "Samsung S23+",
-    description: "Style moderne",
-    alt: "Samsung S23+ case"
-  },
-  {
-    id: 12,
-    image: "https://images.pexels.com/photos/607812/pexels-photo-607812.jpeg",
-    title: "Samsung S23",
-    description: "Protection fiable",
-    alt: "Samsung S23 case"
-  },
-  {
-    id: 13,
-    image: "https://images.pexels.com/photos/5741599/pexels-photo-5741599.jpeg",
-    title: "Google Pixel 8 Pro",
-    description: "Protection Premium",
-    alt: "Google Pixel 8 Pro case"
-  },
-  {
-    id: 14,
-    image: "https://images.pexels.com/photos/1038628/pexels-photo-1038628.jpeg",
-    title: "Google Pixel 8",
-    description: "Design Élégant",
-    alt: "Google Pixel 8 case"
-  },
-  {
-    id: 15,
-    image: "https://images.pexels.com/photos/4071289/pexels-photo-4071289.jpeg",
-    title: "OnePlus 12",
-    description: "Protection Avancée",
-    alt: "OnePlus 12 case"
-  },
-  {
-    id: 16,
-    image: "https://images.pexels.com/photos/4071665/pexels-photo-4071665.jpeg",
-    title: "OnePlus 12R",
-    description: "Style Moderne",
-    alt: "OnePlus 12R case"
-  },
-  {
-    id: 17,
-    image: "https://images.pexels.com/photos/4071879/pexels-photo-4071879.jpeg",
-    title: "Xiaomi 14 Pro",
-    description: "Protection Ultime",
-    alt: "Xiaomi 14 Pro case"
-  },
-  {
-    id: 18,
-    image: "https://images.pexels.com/photos/4071888/pexels-photo-4071888.jpeg",
-    title: "Xiaomi 14",
-    description: "Design Premium",
-    alt: "Xiaomi 14 case"
-  },
-  {
-    id: 19,
-    image: "https://images.pexels.com/photos/4071883/pexels-photo-4071883.jpeg",
-    title: "Nothing Phone 2",
-    description: "Protection Innovante",
-    alt: "Nothing Phone 2 case"
-  },
-  {
-    id: 20,
-    image: "https://images.pexels.com/photos/4071881/pexels-photo-4071881.jpeg",
-    title: "Nothing Phone 2a",
-    description: "Style Unique",
-    alt: "Nothing Phone 2a case"
-  },
-  {
-    id: 21,
-    image: "https://images.pexels.com/photos/5741601/pexels-photo-5741601.jpeg",
-    title: "Pixel Fold",
-    description: "Protection Pliable",
-    alt: "Pixel Fold case"
-  },
-  {
-    id: 22,
-    image: "https://images.pexels.com/photos/5741600/pexels-photo-5741600.jpeg",
-    title: "Galaxy Z Fold5",
-    description: "Protection Adaptative",
-    alt: "Galaxy Z Fold5 case"
-  },
-  {
-    id: 23,
-    image: "https://images.pexels.com/photos/4071887/pexels-photo-4071887.jpeg",
-    title: "Galaxy Z Flip5",
-    description: "Style Compact",
-    alt: "Galaxy Z Flip5 case"
-  },
-  {
-    id: 24,
-    image: "https://images.pexels.com/photos/4071886/pexels-photo-4071886.jpeg",
-    title: "OPPO Find N3",
-    description: "Protection Flexible",
-    alt: "OPPO Find N3 case"
-  }
-];
+type Product = Database['public']['Tables']['products']['Row'];
 
-export default function ProductCarousel() {
+interface ProductCarouselProps {
+  products: Product[];
+}
+
+export function ProductCarousel({ products }: ProductCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showControls, setShowControls] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -242,11 +78,11 @@ export default function ProductCarousel() {
     setCurrentIndex(index);
   };
 
-  // Fonction pour trouver l'index d'une carte
+  // Mise à jour de la fonction findCardIndex
   const findCardIndex = (search: string): number => {
     const index = products.findIndex(product => 
-      product.title.toLowerCase().includes(search.toLowerCase()) ||
-      product.description.toLowerCase().includes(search.toLowerCase())
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      (product.description?.toLowerCase() || '').includes(search.toLowerCase())
     );
     return index;
   };
@@ -314,8 +150,8 @@ export default function ProductCarousel() {
                   <div className="bg-white rounded-md overflow-hidden shadow-sm relative">
                     <div className="relative h-[175px]">
                       <Image
-                        src={product.image}
-                        alt={product.alt}
+                        src={product.image_url || '/images/placeholder.png'}
+                        alt={product.name}
                         fill
                         className="object-cover brightness-90 group-hover:scale-105 transition-transform duration-300"
                         sizes="150px"
@@ -323,7 +159,7 @@ export default function ProductCarousel() {
                       />
                       <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/70 to-transparent">
                         <h3 className="text-white text-xs font-bold mb-1">
-                          {product.title}
+                          {product.name}
                         </h3>
                         <p className="text-white/90 text-[9px]">
                           {product.description}
