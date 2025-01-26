@@ -21,12 +21,12 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (signInError) throw signInError;
 
       // Vérifier le rôle admin
       const { data: adminRole, error: roleError } = await supabase
@@ -41,7 +41,11 @@ export default function LoginPage() {
 
       router.push(redirectTo);
     } catch (error) {
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Une erreur est survenue');
+      }
     } finally {
       setLoading(false);
     }
