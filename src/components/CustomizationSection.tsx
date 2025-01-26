@@ -250,12 +250,14 @@ export default function CustomizationSection() {
     }
   };
 
-  const getPaginatedOptions = (options: string[]) => {
+  const getPaginatedOptions = (options: string[] | undefined): string[] => {
+    if (!options) return [];
     const startIndex = currentPage * ITEMS_PER_PAGE;
     return options.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   };
 
-  const getPageCount = (options: string[]) => {
+  const getPageCount = (options: string[] | undefined): number => {
+    if (!options) return 0;
     return Math.ceil(options.length / ITEMS_PER_PAGE);
   };
 
@@ -491,7 +493,7 @@ export default function CustomizationSection() {
                   case "button":
                     const options = activeOption.id === 1 
                       ? getAvailableModels() 
-                      : activeOption.options;
+                      : activeOption.options || [];
                     
                     const paginatedOptions = getPaginatedOptions(options);
                     const pageCount = getPageCount(options);
@@ -499,7 +501,7 @@ export default function CustomizationSection() {
                     return (
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                          {paginatedOptions?.map((choice, idx) => (
+                          {paginatedOptions.map((choice, idx) => (
                             <button
                               key={idx}
                               onClick={() => handleOptionSelect(activeOption.id, choice)}
