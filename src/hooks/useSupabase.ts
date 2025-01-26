@@ -1,11 +1,13 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { createClientComponentClient, User } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/types/supabase';
 
 export function useSupabase() {
-  const [user, setUser] = useState(null);
+  const supabase = createClientComponentClient<Database>();
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     // Vérifier l'état de l'authentification
@@ -15,53 +17,33 @@ export function useSupabase() {
     });
 
     // Écouter les changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const createOrder = async (orderData) => {
+  const createOrder = async (orderData: any) => {
     try {
       const { data, error } = await supabase
         .from('orders')
         .insert([
           {
             user_id: user?.id,
+            items: orderData.items,
             total_amount: orderData.totalAmount,
-            status: 'pending',
-            shipping_address: orderData.shippingAddress
+            shipping_address: orderData.shippingAddress,
+            status: 'pending'
           }
         ])
         .select()
         .single();
 
       if (error) throw error;
-
-      // Insérer les items de la commande
-      const orderItems = orderData.items.map(item => ({
-        order_id: data.id,
-        product_id: item.productId,
-        customizations: {
-          model: item.customizations.model,
-          color: item.customizations.color,
-          material: item.customizations.material,
-          protection: item.customizations.protection,
-          finish: item.customizations.finish,
-          customText: item.customizations.customText,
-          imageUrl: item.customizations.imageUrl
-        },
-        quantity: item.quantity,
-        price: item.price
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) throw itemsError;
-
       return data;
     } catch (error) {
       console.error('Error creating order:', error);
@@ -69,9 +51,43 @@ export function useSupabase() {
     }
   };
 
+  const getOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      throw error;
+    }
+  };
+
+  const getOrderById = async (orderId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      throw error;
+    }
+  };
+
   return {
     user,
     loading,
-    createOrder
+    createOrder,
+    getOrders,
+    getOrderById,
   };
 } 
