@@ -1,9 +1,17 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'react-hot-toast';
 
+interface Notification {
+  id: string;
+  read: boolean;
+  // ... autres propriétés
+}
+
 export function useNotifications() {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -43,9 +51,9 @@ export function useNotifications() {
     }
   };
 
-  const handleNewReview = (review) => {
-    toast.custom((t) => (
-      <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} bg-white shadow-lg rounded-lg p-4`}>
+  const handleNewReview = (review: any) => {
+    toast((
+      <div className="bg-white shadow-lg rounded-lg p-4">
         <div className="flex items-center">
           <div className="flex-shrink-0">
             <span className="text-blue-500">⭐</span>
@@ -54,7 +62,9 @@ export function useNotifications() {
             <p className="text-sm font-medium text-gray-900">
               Nouvel avis ({review.rating} étoiles)
             </p>
-            <p className="text-sm text-gray-500">{review.review.substring(0, 50)}...</p>
+            <p className="text-sm text-gray-500">
+              {review.review?.substring(0, 50)}...
+            </p>
           </div>
         </div>
       </div>
