@@ -12,6 +12,7 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
+import { GlassCard } from '@/components/GlassCard';
 
 // Charger Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -67,70 +68,91 @@ const paymentMethods: PaymentMethod[] = [
   }
 ];
 
-function CheckoutForm({ amount, onSuccess }) {
+interface PaymentFormProps {
+  amount: number;
+  onSuccess: () => void;
+}
+
+interface PaymentOption {
+  id: string;
+  name: string;
+  description: string;
+  icon: JSX.Element;
+}
+
+const paymentOptions: PaymentOption[] = [
+  {
+    id: 'card',
+    name: 'Carte bancaire',
+    description: 'Paiement sécurisé par carte',
+    icon: <span>💳</span>,
+  },
+  {
+    id: 'paypal',
+    name: 'PayPal',
+    description: 'Paiement via PayPal',
+    icon: <span>🅿️</span>,
+  },
+];
+
+function CheckoutForm({ amount, onSuccess }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!stripe || !elements) return;
 
-    setProcessing(true);
-    setError(null);
-
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setError(submitError.message);
-      setProcessing(false);
+    if (!stripe || !elements) {
       return;
     }
 
+    setProcessing(true);
+
     try {
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, paymentMethod: 'card' }),
-      });
-
-      const { clientSecret } = await response.json();
-
-      const { error: confirmError } = await stripe.confirmPayment({
+      const { error: submitError } = await stripe.confirmPayment({
         elements,
-        clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/success`,
         },
       });
 
-      if (confirmError) {
-        setError(confirmError.message);
+      if (submitError) {
+        setError(submitError.message || 'Une erreur est survenue');
       } else {
         onSuccess();
       }
-    } catch (e) {
-      setError('Une erreur est survenue lors du paiement.');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Une erreur est survenue');
+      }
+    } finally {
+      setProcessing(false);
     }
-
-    setProcessing(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <PaymentElement />
       {error && (
-        <div className="text-red-500 text-sm">{error}</div>
+        <div className="text-red-500 text-sm">
+          {error}
+        </div>
       )}
       <button
         type="submit"
         disabled={!stripe || processing}
         className={`
-          w-full py-2 px-4 rounded-lg text-white
-          ${processing
+          w-full py-3 px-6 rounded-xl text-white
+          ${processing || !stripe
             ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
+            : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
           }
+          transition-all duration-200
+          shadow-lg
         `}
       >
         {processing ? 'Traitement...' : 'Payer maintenant'}
@@ -143,7 +165,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [selectedPayment, setSelectedPayment] = useState<string>('');
-  const [clientSecret, setClientSecret] = useState('');
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     firstName: '',
     lastName: '',
@@ -186,225 +208,62 @@ export default function CheckoutPage() {
     router.push('/success');
   };
 
+  useEffect(() => {
+    // Récupérer le client secret depuis votre API
+    fetch('/api/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: 2999 }), // 29.99€
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret));
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* En-tête */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Finaliser votre commande</h1>
-          <div className="mt-4 flex justify-center space-x-4">
-            <div className={`flex items-center ${step === 'shipping' ? 'text-blue-600' : 'text-gray-500'}`}>
-              <span className="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-2">1</span>
-              Livraison
-            </div>
-            <div className="border-t-2 w-16 mt-4"></div>
-            <div className={`flex items-center ${step === 'payment' ? 'text-blue-600' : 'text-gray-500'}`}>
-              <span className="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-2">2</span>
-              Paiement
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+      </div>
 
-        {/* Formulaire de livraison */}
-        {step === 'shipping' && (
-          <motion.form
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            onSubmit={handleShippingSubmit}
-            className="bg-white rounded-lg shadow-lg p-6 space-y-6"
-          >
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Prénom</label>
-                <input
-                  type="text"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.firstName}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, firstName: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Nom</label>
-                <input
-                  type="text"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.lastName}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, lastName: e.target.value })}
-                />
-              </div>
-            </div>
+      <div className="relative min-h-screen flex items-center justify-center p-4">
+        <GlassCard className="max-w-md w-full p-8">
+          <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">
+            Paiement sécurisé
+          </h1>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                  type="email"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.email}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Téléphone</label>
-                <input
-                  type="tel"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.phone}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Adresse</label>
-              <input
-                type="text"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                value={shippingInfo.address}
-                onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Ville</label>
-                <input
-                  type="text"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.city}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Code postal</label>
-                <input
-                  type="text"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.postalCode}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, postalCode: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Pays</label>
-                <select
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={shippingInfo.country}
-                  onChange={(e) => setShippingInfo({ ...shippingInfo, country: e.target.value })}
+          <div className="space-y-8">
+            <div className="grid grid-cols-2 gap-4">
+              {paymentOptions.map((option) => (
+                <motion.button
+                  key={option.id}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedPayment(option.id)}
+                  className={`
+                    p-4 rounded-xl text-left
+                    ${selectedPayment === option.id
+                      ? 'bg-blue-50 dark:bg-gray-800 border-2 border-blue-500'
+                      : 'bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700'
+                    }
+                  `}
                 >
-                  <option value="">Sélectionnez</option>
-                  <option value="FR">France</option>
-                  <option value="BE">Belgique</option>
-                  <option value="CH">Suisse</option>
-                  <option value="LU">Luxembourg</option>
-                </select>
-              </div>
+                  <div className="text-2xl mb-2">{option.icon}</div>
+                  <div className="font-medium">{option.name}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {option.description}
+                  </div>
+                </motion.button>
+              ))}
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Continuer vers le paiement
-              </button>
-            </div>
-          </motion.form>
-        )}
-
-        {/* Sélection du mode de paiement */}
-        {step === 'payment' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-lg p-6"
-          >
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 gap-4">
-                {paymentMethods.map((method) => (
-                  <label
-                    key={method.id}
-                    className={`
-                      relative flex items-center p-4 cursor-pointer rounded-lg border-2
-                      ${selectedPayment === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}
-                    `}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={method.id}
-                      className="sr-only"
-                      checked={selectedPayment === method.id}
-                      onChange={(e) => handlePaymentMethodSelect(e.target.value)}
-                    />
-                    <div className="flex items-center">
-                      <div className="mr-4 text-gray-600">{method.icon}</div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">{method.name}</div>
-                        <div className="text-sm text-gray-500">{method.description}</div>
-                      </div>
-                    </div>
-                  </label>
-                ))}
-              </div>
-
-              {/* Formulaire de carte Stripe */}
-              {selectedPayment === 'card' && clientSecret && (
-                <div className="mt-6">
-                  <Elements stripe={stripePromise} options={{
-                    clientSecret,
-                    appearance: {
-                      theme: 'stripe',
-                      variables: {
-                        colorPrimary: '#2563eb',
-                      },
-                    },
-                  }}>
-                    <CheckoutForm
-                      amount={29.99}
-                      onSuccess={handlePaymentSuccess}
-                    />
-                  </Elements>
-                </div>
-              )}
-
-              <div className="flex justify-between space-x-4 mt-8">
-                <button
-                  onClick={() => setStep('shipping')}
-                  className="text-gray-600 hover:text-gray-800 transition-colors"
-                >
-                  ← Retour
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Résumé de la commande */}
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Résumé de la commande</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span>Sous-total</span>
-              <span>29.99 €</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Livraison</span>
-              <span>Gratuite</span>
-            </div>
-            <div className="border-t pt-4 flex justify-between font-medium">
-              <span>Total</span>
-              <span>29.99 €</span>
-            </div>
+            {clientSecret && (
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm amount={2999} onSuccess={handlePaymentSuccess} />
+              </Elements>
+            )}
           </div>
-        </div>
+        </GlassCard>
       </div>
     </div>
   );
