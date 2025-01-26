@@ -265,9 +265,8 @@ export default function ProductCarousel() {
     <div className="py-12 bg-gray-300">
       <div className="text-center mb-6">
         <h2 className="text-4xl font-bold mb-2">
-          <span className="text-gray-800">Modèles</span>{' '}
-          <span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-            Disponibles
+          <span className="bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            Modèles Disponibles
           </span>
         </h2>
         <p className="text-gray-600 text-lg mb-4">

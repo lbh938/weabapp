@@ -24,6 +24,9 @@ module.exports = {
       backdropBlur: {
         md: '12px',
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      }
     },
   },
   plugins: [],
